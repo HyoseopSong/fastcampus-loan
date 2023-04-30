@@ -2,6 +2,7 @@ package com.fastcampus.loan.service;
 
 import com.fastcampus.loan.domain.Counsel;
 import com.fastcampus.loan.dto.CounselDTO;
+import com.fastcampus.loan.dto.CounselDTO.*;
 import com.fastcampus.loan.exception.BaseException;
 import com.fastcampus.loan.exception.ResultType;
 import com.fastcampus.loan.repository.CounselRepository;
@@ -45,7 +46,7 @@ public class CounselServiceTest {
             .addressDetail("What Apartment No. 101, 1st floor No. 101")
             .build();
 
-    CounselDTO.Request request = CounselDTO.Request.builder()
+    Request request = Request.builder()
             .name("Member Kim")
             .cellPhone("010-1111-2222")
             .email("mail@abc.de")
@@ -57,7 +58,7 @@ public class CounselServiceTest {
 
     when(counselRepository.save(ArgumentMatchers.any(Counsel.class))).thenReturn(entity);
 
-    CounselDTO.Response actual = counselService.create(request);
+    Response actual = counselService.create(request);
 
     assertThat(actual.getName()).isSameAs(entity.getName());
   }
@@ -72,7 +73,7 @@ public class CounselServiceTest {
 
     when(counselRepository.findById(findId)).thenReturn(Optional.ofNullable(entity));
 
-    CounselDTO.Response actual = counselService.get(1L);
+    Response actual = counselService.get(1L);
 
     assertThat(actual.getCounselId()).isSameAs(findId);
   }
@@ -84,5 +85,27 @@ public class CounselServiceTest {
     when(counselRepository.findById(findId)).thenThrow(new BaseException(ResultType.SYSTEM_ERROR));
 
     Assertions.assertThrows(BaseException.class, () -> counselService.get(2L));
+  }
+
+  @Test
+  void Should_ReturnUpdatedResponseOfExistCounselEntity_When_RequestUpdateExistCounselInfo() {
+    Long findId = 1L;
+
+    Counsel entity = Counsel.builder()
+            .counselId(1L)
+            .name("Member Kim")
+            .build();
+
+    Request request = Request.builder()
+            .name("Member Kang")
+            .build();
+
+    when(counselRepository.save(ArgumentMatchers.any(Counsel.class))).thenReturn(entity);
+    when(counselRepository.findById(findId)).thenReturn(Optional.ofNullable(entity));
+
+    Response actual = counselService.update(findId, request);
+
+    assertThat(actual.getCounselId()).isSameAs(findId);
+    assertThat(actual.getName()).isSameAs(request.getName());
   }
 }

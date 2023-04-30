@@ -1,6 +1,7 @@
 package com.fastcampus.loan.controller;
 
 import com.fastcampus.loan.dto.CounselDTO;
+import com.fastcampus.loan.dto.CounselDTO.*;
 import com.fastcampus.loan.dto.ResponseDTO;
 import com.fastcampus.loan.service.CounselService;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,10 @@ public class CounselController extends AbstractController {
   @GetMapping("/{counselId}")
   public ResponseDTO<CounselDTO.Response> get(@PathVariable Long counselId) {
     return ok(counselService.get(counselId));
+  }
+
+  @PutMapping("/{counselId}")
+  public ResponseDTO<Response> update(@PathVariable Long counselId, @RequestBody Request request) {
+    return ok(counselService.update(counselId, request));
   }
 }

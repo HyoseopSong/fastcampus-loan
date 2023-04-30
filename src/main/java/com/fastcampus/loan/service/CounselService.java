@@ -1,10 +1,13 @@
 package com.fastcampus.loan.service;
 
 import com.fastcampus.loan.dto.CounselDTO;
+import com.fastcampus.loan.dto.CounselDTO.*;
 
 public interface CounselService {
-  CounselDTO.Response create(CounselDTO.Request request);
+  Response create(CounselDTO.Request request);
 
-  CounselDTO.Response get(Long counselId);
+  Response get(Long counselId);
+
+  Response update(Long counselId, Request request);
 
 }
